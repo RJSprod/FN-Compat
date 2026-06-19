@@ -181,4 +181,25 @@ def register_options():
             info = _opt(default, label)
         add_option_if_missing(key, info)
 
+    # --- Pad prompt / negative prompt --------------------------------------
+    # Recreated from old Forge/A1111; Forge Neo gutted these. The runtime patch
+    # in patches_pad_cond reads these keys live.
+    add_option_if_missing(
+        "pad_cond_uncond",
+        _opt(
+            False,
+            "Pad prompt/negative prompt to be same length",
+        ).info("Pads the shorter of the positive/negative conditioning so both "
+               "match; helps when prompt and negative prompt differ in length. "
+               "Changes seeds."),
+    )
+    add_option_if_missing(
+        "pad_cond_uncond_v0",
+        _opt(
+            False,
+            "Pad prompt/negative prompt to be same length (v0)",
+        ).info("Legacy v0 padding behavior (repeat last vector / truncate). "
+               "Takes precedence over the non-v0 option. Changes seeds."),
+    )
+
     clog.log("Options registered")
