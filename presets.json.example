@@ -1,0 +1,19 @@
+{
+  "_comment": "Copy this file to presets.json (same folder) to override or extend built-in presets per-install. Each entry may set 'runtime_force_noise_source' (CPU/GPU/NV/null) and an 'options' map of shared.opts keys to values. New preset names are appended to the radio choices.",
+  "ComfyUI": {
+    "runtime_force_noise_source": "CPU",
+    "options": {
+      "randn_source": "CPU",
+      "emphasis": "Original",
+      "sdxl_crop_top": 0,
+      "sdxl_crop_left": 0
+    }
+  },
+  "MyCustomBackend": {
+    "runtime_force_noise_source": "CPU",
+    "options": {
+      "randn_source": "CPU",
+      "emphasis": "Original"
+    }
+  }
+}
