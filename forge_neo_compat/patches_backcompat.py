@@ -60,6 +60,10 @@ def _on_infotext_pasted(infotext, params):
             "use_old_hires_fix_width_height",
         ):
             changed |= _set(key, True)
+        # Pre-1.6 WebUI always padded conds with the legacy v0 behavior, and
+        # only when the infotext doesn't already record a newer padding mode.
+        if "Pad conds v0" not in str(infotext or "") and "Pad conds" not in str(infotext or ""):
+            changed |= _set("pad_cond_uncond_v0", True)
 
     # External-program markers -> set the reproduce preset.
     if "comfyui" in full or "comfy" in blob_l:

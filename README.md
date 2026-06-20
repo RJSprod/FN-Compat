@@ -24,6 +24,7 @@ A **Settings → Stable Diffusion → Compatibility** section containing:
 - **Use old prompt editing timelines**
 - **Downcast model alphas_cumprod to fp16 before sampling**
 - **Switch to refiner by sampling steps instead of model timesteps**
+- **Pad prompt/negative prompt to be same length** (and the legacy **v0** variant)
 
 Plus administrative controls: `forge_neo_compat_enabled` (master switch),
 `forge_neo_compat_debug_logging`, and `forge_neo_compat_force_patch_reinstall`.
@@ -52,6 +53,7 @@ Then restart Forge Neo. You should see the Compatibility section appear and a
 | `use_old_hires_fix_width_height`, `hires_fix_use_firstpass_conds` | Bound to the **native** Forge Neo options (no duplicate created); driven by presets. |
 | `auto_backcompat` | On infotext paste, auto-enables legacy switches when old WebUI/ComfyUI/Diffusers metadata is detected. |
 | `refiner_switch_by_sample_steps`, `no_dpmpp_sde_batch_determinism` | Best-effort: patched if a signature-compatible call site exists, otherwise persisted and reported as skipped. |
+| `pad_cond_uncond`, `pad_cond_uncond_v0` | Recreates the gutted `CFGDenoiser.pad_cond_uncond`/`_v0` methods (Forge Neo stubs them out) and re-wires them via an `on_cfg_denoiser` callback that pads `text_cond`/`text_uncond` before sampling. |
 
 ### The key RNG detail
 
@@ -118,6 +120,7 @@ sd-forge-neo-compatibility/
 │  ├─ patches_prompt_scheduling.py     # use_old_scheduling
 │  ├─ patches_hires.py                 # native hires option binding
 │  ├─ patches_refiner.py               # refiner-by-sampling-steps
+│  ├─ patches_pad_cond.py              # pad prompt/negative prompt (cond/uncond)
 │  └─ patches_backcompat.py            # auto_backcompat on infotext paste
 ├─ presets.json.example
 └─ README.md

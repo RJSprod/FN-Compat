@@ -74,6 +74,7 @@ def install_all_patches(*args, **kwargs):
         patches_hires,
         patches_refiner,
         patches_backcompat,
+        patches_pad_cond,
     )
 
     _run("RNG", patches_rng.install)
@@ -83,6 +84,7 @@ def install_all_patches(*args, **kwargs):
     _run("Prompt scheduling", patches_prompt_scheduling.install)
     _run("Hires Fix", patches_hires.install)
     _run("Refiner switch", patches_refiner.install)
+    _run("Pad cond/uncond", patches_pad_cond.install)
     _run("Auto backcompat", patches_backcompat.install)
 
     PATCHED = True
@@ -90,6 +92,14 @@ def install_all_patches(*args, **kwargs):
 
 
 def restore_all_patches():
+    # Patches that track their own originals (e.g. recreated class methods that
+    # aren't restorable via the module-attribute path below) restore here first.
+    try:
+        from . import patches_pad_cond
+        patches_pad_cond.restore()
+    except Exception as exc:
+        clog.warn(f"Could not restore pad cond/uncond methods: {exc}")
+
     for dotted, fn in list(ORIGINALS.items()):
         module_name, attr = dotted.rsplit(".", 1)
         try:
